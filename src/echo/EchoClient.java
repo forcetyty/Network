@@ -41,13 +41,13 @@ public class EchoClient {
 			while (true) {
 				System.out.print(">>");
 				chatData = scanner.nextLine();
-				os.write(chatData.getBytes("UTF-8"));
+				
 
 				if(chatData.equals("exit")) {
 					break;
 					//return;
 				}
-				
+				os.write(chatData.getBytes("UTF-8"));
 				// 5. 읽기 - 서버에서 읽기!!!
 				byte[] buffer = new byte[256];
 				int readByteCount = is.read(buffer); // Blocking
