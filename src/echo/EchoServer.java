@@ -1,107 +1,48 @@
 package echo;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 
-/*
- * 과제 : EchoChat
- * 제출자 : 안태영
- */
-
-//클라이언트의 요청에 지속적으로 응답하는 서버
 public class EchoServer {
-
-	// 서버!!!
-	private static final int PORT = 8000; // final 변수는 대문자로 작성하는게 관례!!!
-
+	private static final int PORT = 8000;
+	
 	public static void main(String[] args) {
 		ServerSocket serverSocket = null;
-
+		
 		try {
-			// 1. 서버소켓 생성
+			//1. 서버소켓 생성
 			serverSocket = new ServerSocket();
-
-			// 2. Binding
-			// Socket에 SocketAddress(IPAddress + port)
-			// 바인딩한다.
-			// 127.0.0.1 - loop back Address -> 주소 -> 자기주소!!!
-			InetAddress inetAddress = InetAddress.getLocalHost();
-			String localhostAddress = inetAddress.getHostAddress();
-			InetSocketAddress inetSocketAddress = new InetSocketAddress(inetAddress, PORT);
 			
+			//2. Binding
+			InetAddress inetAddress = InetAddress.getLocalHost();
+			InetSocketAddress inetSocketAddress = new InetSocketAddress(inetAddress, PORT);
 			serverSocket.bind(inetSocketAddress);
-			System.out.println("[TCPServer] binding" + inetAddress.getHostAddress() + ":" + PORT);
-
-			// 3. accept:
-			// 클아이언트로 부터 연결요청(Connet)을 기다린다.
-
-			// serverSocket.accept(); // Blocking
-			// System.out.println("Hello~");
-
-			Socket socket = serverSocket.accept(); // Blocking
-			// Downcasting
-			InetSocketAddress inetRemoteSocketAddress = (InetSocketAddress) socket.getRemoteSocketAddress();
-			String remoteHostAddress = inetRemoteSocketAddress.getAddress().getHostAddress();
-			int remoteHostPort = inetRemoteSocketAddress.getPort();
-
-			System.out.println("[TCPServer] connected from client[" + remoteHostAddress + ":" + remoteHostPort + "]");
-
-			try {
-				// 4. IOStream 받아오기
-				InputStream is = socket.getInputStream();
-				OutputStream os = socket.getOutputStream();
-
-				while (true) {
-
-					// 5. 데이터 읽기
-					byte[] buffer = new byte[256];
-					int readByteCount = is.read(buffer); // Blocking
-					if (readByteCount == -1) {
-						// 정상종료 : Remote Socket이 close()
-						// 메소드를 통해서 정상적으로 소켓을 닫은 경우
-						System.out.println("[TCPServer] closed by client");
-						break;
-					}
-
-					String data = new String(buffer, 0, readByteCount, "UTF-8");
-					System.out.println("[TCPServer] received : " + data);
-
-					// 6. 데이터 쓰기
-					os.write(data.getBytes("UTF-8"));
-				}
-			} catch (SocketException e) {
-				//e.printStackTrace();
-				System.out.println("[TCPServer] abnormal closed by client");
-			} catch (IOException e) {
-				e.printStackTrace();
-			} finally {
-				// 7. Server socket 자원정리
-				if (socket != null && socket.isClosed() == false) {
-					socket.close();
-				}
+			log("binding " + inetAddress.getHostAddress() + ":" + PORT);
+			
+			//3. accept
+			while(true) {
+				Socket socket = serverSocket.accept();
+				new EchoServerReceiveThread(socket).start();
 			}
-
+			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			// 서버 소켓을 예외처리해야 된다.
 			e.printStackTrace();
 		} finally {
-			// 자원정리
+			//8. Server Socket 자원정리
 			try {
-				if (serverSocket != null && serverSocket.isClosed() == false) {
+				if(serverSocket != null && serverSocket.isClosed() == false) {
 					serverSocket.close();
 				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 	}
 
+	public static void log(String log) {
+		System.out.println("[Echo Server#" + Thread.currentThread().getId() + "] " + log);
+	}
 }
