@@ -45,4 +45,5 @@ public class EchoServer {
 	public static void log(String log) {
 		System.out.println("[Echo Server#" + Thread.currentThread().getId() + "] " + log);
 	}
+	
 }
