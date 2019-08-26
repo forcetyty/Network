@@ -44,7 +44,8 @@ public class ChatClient {
 			// new BufferedReader(
 
 			// 3. Create I/O Stream
-			new ChatClientThread(socket, br);
+			new ChatClientThread(socket, br).start();
+			
 
 			// new ChatWindow(name, socket).show();
 
@@ -54,6 +55,7 @@ public class ChatClient {
 			String request = "join:" + name;
 
 			pw.println(request);
+			pw.flush();
 
 			// 5. Chatting input
 			while (true) {
@@ -66,6 +68,7 @@ public class ChatClient {
 				}
 
 				pw.println("message:" + message);
+				pw.flush();
 			}
 
 			scanner.close();

@@ -80,6 +80,7 @@ public class ChatServerThread extends Thread {
 	}
 
 	private void doMessage(String data) {
+		System.out.println("message:" + data.toString());
 		broadcast(this.nickname + ":" + data);
 	}
 
@@ -87,6 +88,7 @@ public class ChatServerThread extends Thread {
 		this.nickname = nickname;
 
 		String data = nickname + "님이 입장하였습니다.";
+		System.out.println("Join:" + nickname + writer);
 		broadcast(data);
 		addWriter(writer);
 
