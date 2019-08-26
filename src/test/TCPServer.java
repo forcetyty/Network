@@ -9,6 +9,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
+import javax.swing.text.TabableView;
+
 public class TCPServer {
 
 	// 서버!!!
@@ -20,6 +22,9 @@ public class TCPServer {
 		try {
 			// 1. 서버소켓 생성
 			serverSocket = new ServerSocket();
+
+			// 1-1. Time-Wait 상태에서 서버 소켓을 즉시 사용하기 위해서!!!!
+			serverSocket.setReuseAddress(true);
 
 			// 2. Binding
 			// Socket에 SocketAddress(IPAddress + port)
@@ -66,6 +71,12 @@ public class TCPServer {
 					System.out.print("[TCPServer] received : " + data);
 
 					// 6. 데이터 쓰기
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					os.write(data.getBytes("UTF-8"));
 				}
 			} catch (SocketException e) {
