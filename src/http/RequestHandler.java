@@ -41,21 +41,35 @@ public class RequestHandler extends Thread {
 
 				// 브라우저가 연결을 끊으면...
 				if (line == null) {
+					System.out.println("Event발생");
 					break;
 				}
 
 				// header만 읽음
 				if ("".equals(line)) {
+					System.out.println("line Event발생");
 					break;
 				}
 
 				if (request == null) {
+					//처음 실행시에 발생
+					//기본 경로일때 발생
+					System.out.println("Request Event발생");
 					request = line;
 					break;
 				}
 			}
 
 			String[] tokens = request.split(" ");
+			System.out.println();
+			for(String i : tokens) {
+				System.out.println("token :" + i);
+			}
+			System.out.println("----------------------------------------------");
+			System.out.println("token[0] :" + tokens[0]);
+			System.out.println("token[1] :" + tokens[1]);
+			System.out.println("token[2] :" + tokens[2]);
+			
 			if ("GET".equals(tokens[0])) {
 				consoleLog("request:" + request);
 				responseStaticResource(outputStream, tokens[1], tokens[2]);
