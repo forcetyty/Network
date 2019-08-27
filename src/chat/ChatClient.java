@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 public class ChatClient {
-	private static String SERVER_IP = "192.168.1.18";
+	private static String SERVER_IP = "192.168.56.1";
 	private static final int SERVER_PORT = 5000;
 
 	public static void main(String[] args) {
@@ -41,13 +41,9 @@ public class ChatClient {
 
 			BufferedReader br = new BufferedReader(
 					new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
-			// new BufferedReader(
 
 			// 3. Create I/O Stream
 			new ChatClientThread(socket, br).start();
-			
-
-			// new ChatWindow(name, socket).show();
 
 			// 4. Join Protocol
 			PrintWriter pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8),
@@ -59,7 +55,7 @@ public class ChatClient {
 
 			// 5. Chatting input
 			while (true) {
-				System.out.print(">>");
+
 				String message = scanner.nextLine();
 
 				if ("quit".equals(message)) {

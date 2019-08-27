@@ -15,24 +15,21 @@ public class ChatClientThread extends Thread {
 	PrintWriter pw = null;
 	Scanner scanner;
 	BufferedReader br;
-	
+
 	public ChatClientThread(Socket socket, BufferedReader br) {
 		this.socket = socket;
 		this.br = br;
 	}
 
-
 	public void run() {
 
 		// 서버로 부터 받는것!!!
+		// 서버로 부터 받기 때문에 클라이언트 쓰레드로 병행처리 하는 것!
 		try {
 			while (true) {
-				// sendMessage();
 				String request = br.readLine();
-				System.out.println("<<" + request + "\n");
+				System.out.println("<<" + request);
 
-				// textArea.append(msg);
-				// textArea.append("\n");
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

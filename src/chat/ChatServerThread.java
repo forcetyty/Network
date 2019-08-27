@@ -8,7 +8,6 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ChatServerThread extends Thread {
@@ -25,7 +24,6 @@ public class ChatServerThread extends Thread {
 	@Override
 	public void run() {
 		try {
-
 
 			// I/O Stream 생성
 			BufferedReader buffereedReader = new BufferedReader(
@@ -46,17 +44,12 @@ public class ChatServerThread extends Thread {
 				String[] tokens = request.split(":");
 				System.out.println(request);
 
-				//System.out.println(tokens[0]);
-				//System.out.println(tokens[1]);
-
 				if ("join".equals(tokens[0])) {
-					System.out.println("join실행");
+					// Join
 					doJoin(tokens[1], printWriter);
-
 				} else if ("message".equals(tokens[0])) {
-					System.out.println("message실행");
+					// Message 전달
 					doMessage(tokens[1]);
-
 				} else if ("quit".equals(tokens[0])) {
 					doQuit(printWriter);
 				}
@@ -68,7 +61,6 @@ public class ChatServerThread extends Thread {
 
 	private void doQuit(PrintWriter writer) {
 		removeWriter(writer);
-
 		String data = this.nickname + "님이 퇴장했습니다.";
 		broadcast(data);
 	}
@@ -80,19 +72,16 @@ public class ChatServerThread extends Thread {
 	}
 
 	private void doMessage(String data) {
-		System.out.println("message:" + data.toString());
+
 		broadcast(this.nickname + ":" + data);
 	}
 
 	private void doJoin(String nickname, Writer writer) {
 		this.nickname = nickname;
-
 		String data = nickname + "님이 입장하였습니다.";
-		System.out.println("Join:" + nickname + writer);
+
 		broadcast(data);
 		addWriter(writer);
-
-		// writer pool에 저장
 
 	}
 
@@ -105,8 +94,7 @@ public class ChatServerThread extends Thread {
 	private void broadcast(String data) {
 		synchronized (listWriters) {
 			for (Writer writer : listWriters) {
-				System.out.println("BroadCast");
-				PrintWriter printWriter = (PrintWriter)writer;
+				PrintWriter printWriter = (PrintWriter) writer;
 				printWriter.println(data);
 				printWriter.flush();
 			}
