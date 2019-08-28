@@ -16,6 +16,7 @@ public class ChatServerThread extends Thread {
 	private Socket socket = null;
 	List<Writer> listWriters = null;
 
+
 	public ChatServerThread(Socket socket, List<Writer> listWriters) {
 		this.socket = socket;
 		this.listWriters = listWriters;
@@ -50,9 +51,10 @@ public class ChatServerThread extends Thread {
 				} else if ("message".equals(tokens[0])) {
 					// Message 전달
 					doMessage(tokens[1]);
+					
 				} else if ("quit".equals(tokens[0])) {
 					doQuit(printWriter);
-				}
+				} 
 			}
 		} catch (IOException e) {
 			consoleLog(this.nickname + "님이 채팅방을 나갔습니다.");

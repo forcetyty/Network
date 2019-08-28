@@ -13,6 +13,8 @@ import java.util.List;
 public class ChatServer {
 
 	public static final int PORT = 5000;
+	public static final String IP = "127.0.0.1";
+	
 	public static List<Writer> listWriters = new ArrayList<Writer>();
 
 	public static void main(String[] args) {
@@ -24,9 +26,8 @@ public class ChatServer {
 			serverSocket = new ServerSocket();
 
 			// 2. 바인딩
-			String hostAddress = InetAddress.getLocalHost().getHostAddress();
-			serverSocket.bind(new InetSocketAddress(hostAddress, PORT));
-			consoleLog("연결 기다림 - " + hostAddress + ":" + PORT);
+			serverSocket.bind(new InetSocketAddress(IP, PORT));
+			consoleLog("연결 기다림 - " + IP + ":" + PORT);
 
 			// 3. 요청 대기
 			while (true) {
