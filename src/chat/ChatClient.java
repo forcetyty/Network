@@ -15,9 +15,8 @@ public class ChatClient {
 	private static final int SERVER_PORT = 5000;
 
 	public static void main(String[] args) {
-		String name = null;
 		Scanner scanner = new Scanner(System.in);
-
+		String name;
 		while (true) {
 
 			System.out.println("대화명을 입력하세요.");
@@ -38,12 +37,13 @@ public class ChatClient {
 			// 2. Connect to Server
 			socket.connect(new InetSocketAddress(SERVER_IP, SERVER_PORT));
 			consoleLog("채팅방에 입장하였습니다.");
+			consoleLog("귓속말은 '상대방이름=내용' 입력하시면 됩니다.");
 
 			BufferedReader br = new BufferedReader(
 					new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
 
 			// 3. Create I/O Stream
-			new ChatClientThread(socket, br).start();
+			new ChatClientThread(socket, br, name).start();
 
 			// 4. Join Protocol
 			PrintWriter pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8),
@@ -57,14 +57,19 @@ public class ChatClient {
 			while (true) {
 
 				String message = scanner.nextLine();
+				// qu = message.split("=");//
 
 				if ("quit".equals(message)) {
 					pw.println("quit:");
 					break;
 				}
 
-				pw.println("message:" + message);
-				pw.flush();
+				if (message.equals("")) {
+					System.out.println("입력하세요!!!");
+				} else {
+					pw.println("message:" + message);
+					pw.flush();
+				} 
 			}
 
 			scanner.close();
